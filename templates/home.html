@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% if tit %}
+
+            <title>{{tit}}</title>
+        {% else %}
+            <title>Fixed Book Page</title>
+
+        {% endif %}
+
+
+
+    </head>
+    <body>
+                <h1>Hello All , How are you?</h1>
+                
+                
+                {% if booksKey %}
+                    <ul>
+                    {% for book in booksKey %}
+
+                        <li>{{book.bid}}</li>
+                        <li>{{book.title}}</li>
+                        <li>{{book.author}}</li>
+
+                    {% endfor %}
+                            </ul>
+                {% endif %}
+
+
+    </body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <div>
+            {% if booklist %}
+        {% for book in booklist %}
+         <span style="background-color:bisque">{{book.bid}}</span> 
+         <span style="background-color:rgb(196, 255, 237)">{{book.title}}</span> 
+         <span style="background-color:rgb(209, 14, 167)">{{book.author}}</span> 
+        {% endfor %}
+        {% endif %}
+                </div>
+
+    </body>
+</html>
