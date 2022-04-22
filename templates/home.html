@@ -1,33 +1,42 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        {% if tit %}
+{%  extends "layout.html" %}
+{% block content %}
+<form class="form" action="/register" method="post">
+    <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" class="form-control" id="fullname" name="fullname">
+     
+      </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Email address</label>
+      <input type="email" class="form-control" id="exampleInputEmail1" name="email" aria-describedby="emailHelp">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1">Password</label>
+      <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+    </div>
+    <div class="form-group">
+        <label for="cPassword1">Confirm Password</label>
+        <input type="password" name="con_password" class="form-control" id="cPassword1">
+      </div>
+    <p>choose gender</p>
+    <div class="form-check">
+        <label class="form-check-label">
+          <input type="radio" class="form-check-input" name="gender" value="male">Male
+        </label>
+      </div>
+      <div class="form-check">
+        <label class="form-check-label">
+          <input type="radio" class="form-check-input" name="gender" value="female">Female
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea class="form-control" rows="5" id="address" name="address"></textarea>
+      </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 
-            <title>{{tit}}</title>
-        {% else %}
-            <title>Fixed Book Page</title>
 
-        {% endif %}
-
-
-
-    </head>
-    <body>
-                <h1>Hello All , How are you?</h1>
-                
-                
-                {% if booksKey %}
-                    <ul>
-                    {% for book in booksKey %}
-
-                        <li>{{book.bid}}</li>
-                        <li>{{book.title}}</li>
-                        <li>{{book.author}}</li>
-
-                    {% endfor %}
-                            </ul>
-                {% endif %}
-
-
-    </body>
-</html>
+{% endblock  %}
