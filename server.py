@@ -114,6 +114,9 @@ def logout():
 
 
 """ The following part is for admin site"""
+@app.route('/adminHome')
+def admin_home():
+    return render_template("adminLogin.html")
 
 @app.route('/bookInsert',methods=['GET',"POST"])
 def book_insert():
@@ -125,11 +128,51 @@ def book_insert():
         price = request.form['price']
         category = request.form['category']
         bookcover = request.files['bfile']
-        filename = bookcover.filename
+        filename = bookcover.filename  # retrieving filename from file object named bookcover
         bookcover.save(os.path.join(app.config['UPLOAD'],filename))
-
         description = request.form['description']
-        return "insert book"
+        with connect() as conn:
+            sql ="insert into book (title,author,price,category,description,cover) values (?,?,?,?,?,?)"
+            
+            
+            cursor = conn.cursor()
+            cursor.execute(sql,(title,author,price,category,description,filename))
+            if cursor.rowcount>0:
+                return "successs "
+
+        return "insert book failure"
+
+@app.route('/adminLogin',methods=['GET','POST'])
+def admin_login():
+    if request.method == 'GET':
+        return render_template('adminLogin.html')
+    else:
+        email = request.form['email']
+        form_password = request.form['password']
+        with connect() as conn:
+            cursor = conn.cursor()
+            sql = "select password from admin where email=?"
+            row = cursor.execute(sql,(email,)).fetchone()
+            
+            
+            if row is None:
+                flash('username does not exist. Try again','warning')
+                return redirect(url_for('admin_login'))
+            else:
+                db_password = row[0]
+                if db_password == form_password:
+                    session['admin']= email
+                    flash('login success!!!','success')
+                    return render_template('adminSuccess.html')
+                else:
+                    flash('Password is wrong. Try again','warning')
+                    return redirect(url_for('admin_login'))
+
+@app.route('/adminlogout')
+def admin_logout():
+    session.clear()
+    # redirect to a particular function name
+    return redirect(url_for('admin_login'))
 
 if __name__ == "__main__":
     app.run(port='5243',debug=True)
