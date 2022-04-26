@@ -1,5 +1,5 @@
-from django.shortcuts import redirect
-from flask import Flask,render_template,request,session,redirect,url_for
+
+from flask import Flask,render_template,request,session,redirect,url_for,flash
 import sqlite3
 
 app = Flask(__name__) #constructing app object
@@ -61,11 +61,11 @@ def home_page():
                 sql ="insert into user (fullname,email,address,password, gender) values (?,?,?,?,?)"
                 conn.execute(sql,(fullname,email,address,password,gender))
                 conn.commit()
+                flash('Register success','success')
             return render_template('register_success.html',message=f"{fullname} {email} {password} {gender} {address} added to table")
         else:
+            flash('Password length must be 8 characters or password and confirm password must be the same ','danger')
             return redirect(url_for("home_page"))
-
-
 
         
 
@@ -74,7 +74,37 @@ def connect():
     conn.row_factory= sqlite3.Row
     return conn
 
+@app.route('/login',methods=['GET','POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
+        email = request.form['email']
+        form_password = request.form['password']
+        with connect() as conn:
+            cursor = conn.cursor()
+            sql = "select password from user where email=?"
+            row = cursor.execute(sql,(email,)).fetchone()
+            
+            
+            if row is None:
+                flash('username does not exist. Try again','warning')
+                return redirect(url_for('login'))
+            else:
+                db_password = row[0]
+                if db_password == form_password:
+                    flash('login success!!!','success')
+                    return render_template('login_success.html')
+                else:
+                    flash('Password is wrong. Try again','warning')
+                    return redirect(url_for('login'))
 
+@app.route('/bookInsert',methods=['GET',"POST"])
+def book_insert():
+    if request.method == 'GET':
+        return render_template('book.html')
+    else:
+        pass
 
 if __name__ == "__main__":
     app.run(port='5243',debug=True)
