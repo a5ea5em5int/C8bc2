@@ -1,0 +1,45 @@
+{% extends "layoutAdmin.html" %}
+{% block content %}
+
+
+
+
+<form class="form" action="/updateBook2" method="post">
+    <div class="form-group">
+        <label for="title">Book Title</label>
+        <input type="text" class="form-control"  name="title" value="{{book.title}}">
+     
+      </div>
+      <input type="hidden" name="bid" value="{{book.bid}}">
+    <div class="form-group">
+      <label for="author">Author</label>
+      <input type="text" class="form-control"  name="author" value="{{book.author}}" >
+    
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="number" class="form-control"  name="price" value="{{book.price}}" >
+    
+    </div>
+   <!--  <div class="form-group">
+      <label for="bfile">Choose file</label>
+      <input type="file" name="bfile" class="form-control-file">
+    </div> -->
+    
+    <
+      <div class="form-group">
+        <label for="description">description</label>
+        <textarea class="form-control" rows="3" name="description"></textarea>
+      </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+
+
+
+
+
+
+
+
+{% endblock %}

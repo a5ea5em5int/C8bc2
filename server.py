@@ -116,7 +116,7 @@ def logout():
 """ The following part is for admin site"""
 @app.route('/adminHome')
 def admin_home():
-    return render_template("adminLogin.html")
+    return render_template("adminhome.html")
 
 @app.route('/bookInsert',methods=['GET',"POST"])
 def book_insert():
@@ -155,6 +155,57 @@ def view_book():
                 return render_template('viewBook.html',books = row)
     else:
         return redirect(url_for('admin_login'))
+
+@app.route('/updateBook',methods=['GET','POST'])
+def update_book():
+    if 'admin' in session:
+        if request.method == 'GET':
+            with connect() as conn:
+                cursor = conn.cursor()
+                sql = 'select * from book'
+                row = cursor.execute(sql)
+                return render_template('editBook.html',books = row)
+
+        else:
+            return "in post"
+    else:
+        return redirect(url_for('admin_login'))
+
+
+@app.route('/editBook2',methods=['POST'])
+def edit_book():
+    if 'admin' in session:
+        bookid = request.form['bid']
+        with connect() as conn:
+            cursor = conn.cursor()
+            sql = 'select * from book where bid=?'
+            result_book = cursor.execute(sql,(bookid)).fetchone()
+            return render_template('editBookForm.html',book = result_book)
+    else:
+        return redirect(url_for('admin_login'))
+
+
+@app.route('/updateBook2', methods=['POST'])
+def update_bookfinal():
+    title = request.form['title']
+    author = request.form['author']
+    price = request.form['price']
+    descr =request.form['description']
+    book_id = request.form['bid']
+    with connect() as conn:
+        cursor = conn.cursor()
+        sql ='update book set title=? , author=?, price=?,description =? where bid=?'
+        cursor.execute(sql,(title,author,price,descr,book_id))
+        if cursor.rowcount>0:
+            return "update success"
+        else:
+            return "some error"
+
+
+
+        
+
+
 
 
 
