@@ -1,0 +1,53 @@
+{% extends "layoutAdmin.html" %}
+{% block content %}
+{% if books %}
+<table class="table">
+    <thead>
+
+        <tr>
+            <td>
+                Title
+            </td>
+            <td>
+                Author
+            </td>
+            <td>
+               Price 
+            </td>
+            <td>
+               Description
+            </td>
+            <td>
+                Image
+                
+            </td>
+
+
+        </tr>
+
+
+    </thead>
+    <tbody>  
+        {% for book in books %}
+
+        <tr><td>{{book.title}}</td><td>{{book.author}}</td><td>{{book.price}}</td><td>{{book.category}}</td><td><img src="static/images/{{book.cover}}"</td></tr>
+
+      
+
+        {% endfor %}
+
+
+
+
+    </tbody>
+
+
+
+</table>
+{% else %}
+    book doesnot exist.
+{% endif %}
+
+
+
+{% endblock %}

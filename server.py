@@ -138,9 +138,25 @@ def book_insert():
             cursor = conn.cursor()
             cursor.execute(sql,(title,author,price,category,description,filename))
             if cursor.rowcount>0:
-                return "successs "
+                return redirect(url_for('view_book'))
 
         return "insert book failure"
+
+@app.route('/viewBook')
+def view_book():
+    if 'admin' in session:
+        with connect() as conn:
+            cursor = conn.cursor()
+            sql = 'select * from book'
+            row = cursor.execute(sql)
+            if row is None:
+                return render_template('adminLogin_success.html')
+            else:
+                return render_template('viewBook.html',books = row)
+    else:
+        return redirect(url_for('admin_login'))
+
+
 
 @app.route('/adminLogin',methods=['GET','POST'])
 def admin_login():
@@ -167,6 +183,9 @@ def admin_login():
                 else:
                     flash('Password is wrong. Try again','warning')
                     return redirect(url_for('admin_login'))
+                
+
+
 
 @app.route('/adminlogout')
 def admin_logout():
