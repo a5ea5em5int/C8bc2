@@ -35,15 +35,17 @@
             <td><img src="static/images/{{book.cover}}"  width="80px" height="120px"></td>
             <td><form action="/editBook2" method="POST">
                 <input type="hidden" name="bid" value="{{book.bid}}">
-                <input type="submit" class="btn btn-info" value="Edit"></button>
+                <input type="submit" class="btn btn-info" value="Edit"> </form>
 
+           </td>
 
-            </form></td>
             <td><form action="/deleteBook" method="POST">
                 <input type="hidden" name="bid" value="{{book.bid}}">
-                <input type="submit" class="btn btn-info" value="Delete"></button></td>
+                <input type="submit" class="btn btn-info" value="Delete"></form>
+            </td>
         </tr>
 
+   
       
 
         {% endfor %}

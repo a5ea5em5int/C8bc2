@@ -1,4 +1,4 @@
-{% extends "layoutAdmin.html" %}
+{% extends "layout.html" %}
 {% block content %}
 {% if books %}
 <table class="table">
@@ -30,7 +30,20 @@
     <tbody>  
         {% for book in books %}
 
-        <tr><td>{{book.title}}</td><td>{{book.author}}</td><td>{{book.price}}</td><td>{{book.category}}</td><td><img src="static/images/{{book.cover}}" style="width:120px;height:150px"> </td></tr>
+        <tr><td>{{book.title}}</td><td>{{book.author}}</td><td>{{book.price}}</td><td>{{book.category}}</td><td><img src="static/images/{{book.cover}}" style="width:120px;height:150px"> </td>
+        
+        
+        <td><form action="/purchase" method="POST">
+            <input type="number" name="qty">
+            <input type="hidden" name="bid" value="{{book.bid}}">
+            <input type="submit" value="Buy" class="btn btn-secondary">
+
+
+
+        </form></td>
+        
+        
+        </tr>
 
       
 

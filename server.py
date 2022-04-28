@@ -104,6 +104,66 @@ def login():
                     flash('Password is wrong. Try again','warning')
                     return redirect(url_for('login'))
 
+@app.route('/checkOut')
+def checkOut():
+    if 'cart' in session:
+        if len(session['cart'])>0:
+            cart = session['cart']
+            basket={}
+            for bid,qty in cart.items():
+                basket[bid]=qty
+            bookInfo=[]
+            with connect() as conn:
+                cursor = conn.cursor()
+                for k,v in basket.items():
+                    row = cursor.execute("select * from book where bid=?",(k)).fetchone()
+
+
+        return "something"
+    else: return "there is no items in your cart"
+
+
+@app.route('/purchase',methods=['POST'])
+def purchase():
+    if 'user' in session:
+        bookid = request.form['bid']
+        qty = request.form['qty']
+        if 'cart' not in session:
+            session['cart']=None
+            cart={}
+            cart[bookid] = qty
+            session['cart']= cart
+        else:
+            cart = session['cart']
+            if bookid in cart:
+                oldqty = cart[bookid]
+                cart[bookid]= oldqty + qty
+            else:
+                cart[bookid] = qty
+            session['cart'] = cart
+        return redirect(url_for('user_view_book'))
+    else:
+        return redirect(url_for('login'))
+
+
+
+
+
+
+@app.route('/userViewBook')
+def user_view_book():
+    if 'user' in session:
+        with connect() as conn:
+            cursor = conn.cursor()
+            sql = 'select * from book'
+            row = cursor.execute(sql)
+           
+            
+            return render_template('userViewBook.html',books = row)
+    else:
+        return redirect(url_for('login'))
+
+
 
 
 @app.route('/logout')
@@ -139,8 +199,10 @@ def book_insert():
             cursor.execute(sql,(title,author,price,category,description,filename))
             if cursor.rowcount>0:
                 return redirect(url_for('view_book'))
+            else:
+                flash("something wrong in sql syntax")
 
-        return "insert book failure"
+        return redirect(url_for('admin_home'))
 
 @app.route('/viewBook')
 def view_book():
@@ -155,6 +217,29 @@ def view_book():
                 return render_template('viewBook.html',books = row)
     else:
         return redirect(url_for('admin_login'))
+
+
+@app.route('/deleteBook',methods=['POST'])
+def delete_book():
+    if 'admin' in session:
+        book_id = request.form['bid']
+        with connect() as conn:
+            cursor = conn.cursor()
+            cursor.execute("delete from book where bid=?",(book_id))
+            if cursor.rowcount>0:
+                flash('book has been deleted ','info')
+                
+            else:
+                flash('something went wrong in deletion')
+        return redirect(url_for('view_book'))
+    else:
+        redirect(url_for('admin_login'))
+
+
+
+
+
+
 
 @app.route('/updateBook',methods=['GET','POST'])
 def update_book():
@@ -197,9 +282,10 @@ def update_bookfinal():
         sql ='update book set title=? , author=?, price=?,description =? where bid=?'
         cursor.execute(sql,(title,author,price,descr,book_id))
         if cursor.rowcount>0:
-            return "update success"
+            return redirect(url_for('update_book'))
         else:
-            return "some error"
+            flash('update fail','warning')
+            return redirect(url_for('update_book'))
 
 
 
