@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<table class="table table-borderless">
+{% for k,data in bookInfo.items() %}
+
+    <tr><td> {{data[0].title}}</td><td>{{data[0].price}} </td>
+        <td>*</td><td>{{data[1]}}</td><td>{{data[2]}}</td>
+    </tr>
+
+
+
+{% endfor %}
+<div>Total Amount = {{tamt}}</div>
+</table>
+{% endblock%}

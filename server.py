@@ -112,14 +112,25 @@ def checkOut():
             basket={}
             for bid,qty in cart.items():
                 basket[bid]=qty
-            bookInfo=[]
+            bookInfo={}
             with connect() as conn:
                 cursor = conn.cursor()
+                totalAmount = 0
                 for k,v in basket.items():
+                    amt=0
                     row = cursor.execute("select * from book where bid=?",(k)).fetchone()
+                    amt = row[3]* int(v)
+                    totalAmount += amt
+                    bookInfo[k] =[row,v,amt]
+            return render_template('checkout.html',bookInfo = bookInfo, tamt =totalAmount)
+        else:
+            return "there is no item in your cart"
+                   
 
 
-        return "something"
+
+
+        return  render_template('checkout.html',bookInfo= bookInfo)
     else: return "there is no items in your cart"
 
 
